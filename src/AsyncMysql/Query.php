@@ -37,6 +37,10 @@ class Query extends EventEmitter
     {
         if (is_null($this->connection)) {
             $this->connection = $this->client->getConnection();
+
+            if ($this->loop->onRollback) {
+                mysqli_autocommit($this->connection, false);
+            }
         }
     }
 
@@ -71,5 +75,7 @@ class Query extends EventEmitter
         } else {
             $this->emit('error', array($this));
         }
+
+        return $result;
     }
 }
